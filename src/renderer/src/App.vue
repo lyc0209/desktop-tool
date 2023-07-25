@@ -9,4 +9,3 @@ import { zhCN, dateZhCN } from "naive-ui"
     </div>
   </n-config-provider>
 </template>
-
