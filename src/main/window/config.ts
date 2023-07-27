@@ -22,6 +22,7 @@ windowOptionMap.set(WindowType.MAIN, {
       }
     }
   },
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   callback: async (window: BrowserWindow, _windowManager: IWindowManager) => {
     window.webContents.setWindowOpenHandler(({ url }) => {
       if (url.startsWith("https://login.microsoftonline.com/common/oauth2/v2.0/authorize")) {
