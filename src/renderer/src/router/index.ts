@@ -15,7 +15,7 @@ const router = createRouter({
         {
           path: "/index",
           name: "Index",
-          component: import("@renderer/views/Index.vue")
+          component: () => import("@renderer/views/Index.vue")
         },
         {
           path: "/doc",
@@ -25,7 +25,7 @@ const router = createRouter({
             {
               path: "/doc/pdf",
               name: "PDF",
-              component: import("@renderer/views/doc/pdf-transform/PDFTransform.vue")
+              component: () => import("@renderer/views/doc/pdf-transform/PDFTransform.vue")
             }
           ]
         }
