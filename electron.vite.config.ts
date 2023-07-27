@@ -40,7 +40,9 @@ export default defineConfig({
           "vue",
           {
             "naive-ui": ["useDialog", "useMessage", "useNotification", "useLoadingBar"]
-          }
+          },
+          "vue-router",
+          "vue-router/composables"
         ]
       }),
       Components({

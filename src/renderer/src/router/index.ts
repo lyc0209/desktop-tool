@@ -26,6 +26,11 @@ const router = createRouter({
               path: "/doc/pdf",
               name: "PDF",
               component: () => import("@renderer/views/doc/pdf-transform/PDFTransform.vue")
+            },
+            {
+              path: "/doc/pdf/to_picture",
+              name: "ToPicture",
+              component: () => import("@renderer/views/doc/pdf-transform/to-picture/ToPicture.vue")
             }
           ]
         }
