@@ -1,5 +1,6 @@
-import { contextBridge } from "electron"
+import { contextBridge, ipcRenderer } from "electron"
 import { electronAPI } from "@electron-toolkit/preload"
+import { IpcEnum } from "@common/IpcEnum"
 
 // Custom APIs for renderer
 const api = {}
@@ -11,6 +12,10 @@ if (process.contextIsolated) {
   try {
     contextBridge.exposeInMainWorld("electron", electronAPI)
     contextBridge.exposeInMainWorld("api", api)
+
+    contextBridge.exposeInMainWorld("test", {
+      getTest: (keys: string): Promise<string> => ipcRenderer.invoke(IpcEnum.Test, keys)
+    })
   } catch (error) {
     console.error(error)
   }

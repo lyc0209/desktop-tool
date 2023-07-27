@@ -9,15 +9,28 @@ import presetRemToPx from "@unocss/preset-rem-to-px"
 
 export default defineConfig({
   main: {
+    resolve: {
+      alias: {
+        "@main": resolve("src/main"),
+        "@common": resolve("src/common")
+      }
+    },
     plugins: [externalizeDepsPlugin()]
   },
   preload: {
+    resolve: {
+      alias: {
+        "@main": resolve("src/main"),
+        "@common": resolve("src/common")
+      }
+    },
     plugins: [externalizeDepsPlugin()]
   },
   renderer: {
     resolve: {
       alias: {
-        "@renderer": resolve("src/renderer/src")
+        "@renderer": resolve("src/renderer/src"),
+        "@common": resolve("src/common")
       }
     },
     plugins: [

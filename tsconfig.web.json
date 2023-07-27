@@ -8,7 +8,8 @@
     "src/renderer/auto-imports.d.ts",
     "src/preload/*.d.ts",
     "src/preload/types/*.d.ts",
-    "src/renderer/src/types/global.d.ts"
+    "src/renderer/src/types/global.d.ts",
+    "src/common/**/*"
   ],
   "compilerOptions": {
     "composite": true,
@@ -16,6 +17,12 @@
     "paths": {
       "@renderer/*": [
         "src/renderer/src/*"
+      ],
+      "@preload/*": [
+        "src/preload/*"
+      ],
+      "@common/*": [
+        "src/common/*"
       ]
     },
     "types": ["naive-ui/volar"]

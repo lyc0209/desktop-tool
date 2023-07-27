@@ -1,5 +1,11 @@
 <script setup lang="ts">
 import { zhCN, dateZhCN } from "naive-ui"
+import { getTestApi } from "@renderer/api";
+
+getTestApi("lyc").then((res) => {
+  console.log(res)
+})
+
 </script>
 
 <template>
