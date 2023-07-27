@@ -3,9 +3,7 @@ import { zhCN, dateZhCN } from "naive-ui"
 </script>
 
 <template>
-  <n-config-provider :locale="zhCN" :date-locale="dateZhCN">
-    <div>
-      <n-button type="primary"> Primary </n-button>
-    </div>
+  <n-config-provider class="h-screen" :locale="zhCN" :date-locale="dateZhCN">
+    <router-view />
   </n-config-provider>
 </template>
