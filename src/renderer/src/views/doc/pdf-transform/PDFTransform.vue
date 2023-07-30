@@ -1,8 +1,9 @@
 <script setup lang="ts">
 import PageWrapper from "@renderer/components/page-wrapper/PageWrapper.vue"
 
+const router = useRouter()
 const toPictureClick = () => {
-  // router.push("/doc/pdf/to_picture")
+  router.push("/doc/pdf/to_picture")
 }
 </script>
 

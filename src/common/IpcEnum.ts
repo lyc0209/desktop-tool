@@ -1,3 +1,5 @@
 export const enum IpcEnum {
-  Test = "test"
+  Test = "test",
+
+  TransformPDFToPicture = "transformPDFToPicture"
 }

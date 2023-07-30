@@ -1,9 +1,14 @@
 import { contextBridge, ipcRenderer } from "electron"
 import { electronAPI } from "@electron-toolkit/preload"
 import { IpcEnum } from "@common/IpcEnum"
+import { DocApi } from "@preload/types"
 
 // Custom APIs for renderer
 const api = {}
+
+const docApi: DocApi = {
+  transformPDFToPicture: (pathList) => ipcRenderer.invoke(IpcEnum.TransformPDFToPicture, pathList)
+}
 
 // Use `contextBridge` APIs to expose Electron APIs to
 // renderer only if context isolation is enabled, otherwise
@@ -16,6 +21,7 @@ if (process.contextIsolated) {
     contextBridge.exposeInMainWorld("test", {
       getTest: (keys: string): Promise<string> => ipcRenderer.invoke(IpcEnum.Test, keys)
     })
+    contextBridge.exposeInMainWorld("doc", docApi)
   } catch (error) {
     console.error(error)
   }

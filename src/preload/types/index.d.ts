@@ -5,9 +5,14 @@ declare global {
     electron: ElectronAPI
     api: unknown
     test: TestApi
+    doc: DocApi
   }
 }
 
 export interface TestApi {
   getTest: (keys: string) => Promise<string>
+}
+
+export interface DocApi {
+  transformPDFToPicture: (pathList: string[]) => Promise<boolean>
 }

@@ -12,7 +12,8 @@ export default defineConfig({
     resolve: {
       alias: {
         "@main": resolve("src/main"),
-        "@common": resolve("src/common")
+        "@common": resolve("src/common"),
+        "@preload": resolve("src/preload")
       }
     },
     plugins: [externalizeDepsPlugin()]
@@ -21,7 +22,8 @@ export default defineConfig({
     resolve: {
       alias: {
         "@main": resolve("src/main"),
-        "@common": resolve("src/common")
+        "@common": resolve("src/common"),
+        "@preload": resolve("src/preload")
       }
     },
     plugins: [externalizeDepsPlugin()]
@@ -30,7 +32,8 @@ export default defineConfig({
     resolve: {
       alias: {
         "@renderer": resolve("src/renderer/src"),
-        "@common": resolve("src/common")
+        "@common": resolve("src/common"),
+        "@preload": resolve("src/preload")
       }
     },
     plugins: [
@@ -41,8 +44,7 @@ export default defineConfig({
           {
             "naive-ui": ["useDialog", "useMessage", "useNotification", "useLoadingBar"]
           },
-          "vue-router",
-          "vue-router/composables"
+          "vue-router"
         ]
       }),
       Components({
