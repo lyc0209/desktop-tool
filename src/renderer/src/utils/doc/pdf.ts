@@ -4,34 +4,52 @@ import * as pdfWorker from "pdfjs-dist/build/pdf.worker.min?url"
 pdfLib.GlobalWorkerOptions.workerSrc = pdfWorker.default
 
 export const convertPdfToImages = async (pdfBuffer: ArrayBuffer) => {
-  const blobArr: Blob[] = []
+  return new Promise<Blob[]>((resolve, reject) => {
+    const blobArr: Blob[] = []
 
-  // 获取canvas元素和pdf文件路径
-  const canvas = document.createElement("canvas")
+    // 获取canvas元素和pdf文件路径
+    const canvas = document.createElement("canvas")
 
-  const pdf = await pdfLib.getDocument(pdfBuffer).promise
+    pdfLib
+      .getDocument(pdfBuffer)
+      .promise.then((pdf) => {
+        for (let pageNum = 1; pageNum <= pdf.numPages; pageNum++) {
+          pdf
+            .getPage(pageNum)
+            .then((page) => {
+              const viewport = page.getViewport({ scale: 1.0 })
 
-  for (let pageNum = 1; pageNum <= pdf.numPages; pageNum++) {
-    const page = await pdf.getPage(pageNum)
+              // 设置canvas尺寸
+              canvas.width = viewport.width
+              canvas.height = viewport.height
 
-    const viewport = page.getViewport({ scale: 1.0 })
-
-    // 设置canvas尺寸
-    canvas.width = viewport.width
-    canvas.height = viewport.height
-
-    await page.render({
-      canvasContext: canvas.getContext("2d"),
-      viewport: viewport
-    }).promise
-
-    canvas.toBlob((blob) => {
-      console.log(blob)
-      if (blob) {
-        blobArr.push(blob)
-      }
-    })
-  }
-
-  return blobArr
+              page
+                .render({
+                  canvasContext: canvas.getContext("2d"),
+                  viewport: viewport
+                })
+                .promise.then(() => {
+                  canvas.toBlob((blob) => {
+                    console.log(blob, pageNum, pdf.numPages)
+                    if (blob) {
+                      blobArr.push(blob)
+                    }
+                    if (pageNum === pdf.numPages) {
+                      resolve(blobArr)
+                    }
+                  })
+                })
+                .catch((e) => {
+                  reject(e)
+                })
+            })
+            .catch((e) => {
+              reject(e)
+            })
+        }
+      })
+      .catch((e) => {
+        reject(e)
+      })
+  })
 }

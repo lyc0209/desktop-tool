@@ -7,7 +7,7 @@ import { DocApi } from "@preload/types"
 const api = {}
 
 const docApi: DocApi = {
-  transformPDFToPicture: (pathList) => ipcRenderer.invoke(IpcEnum.TransformPDFToPicture, pathList)
+  transformPDFToPicture: (list) => ipcRenderer.invoke(IpcEnum.TransformPDFToPicture, list)
 }
 
 // Use `contextBridge` APIs to expose Electron APIs to

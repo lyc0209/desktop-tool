@@ -14,5 +14,5 @@ export interface TestApi {
 }
 
 export interface DocApi {
-  transformPDFToPicture: (pathList: string[]) => Promise<boolean>
+  transformPDFToPicture: (list: ArrayBuffer[]) => Promise<boolean>
 }

@@ -3,6 +3,7 @@ import { ArchiveOutline as ArchiveIcon } from "@vicons/ionicons5"
 import { UploadFileInfo } from "naive-ui"
 import { transformPDFToPictureApi } from "@renderer/api/doc"
 import { convertPdfToImages } from "@renderer/utils/doc/pdf"
+import { blobToArrayBuffer } from "@common/utils/file"
 
 const toTransformList = ref<UploadFileInfo[]>([])
 
@@ -21,13 +22,12 @@ const onTransformClick = async () => {
 
   const bufferList = await Promise.all(toTransformList.value.map((item) => item.file.arrayBuffer()))
 
-  const result = await convertPdfToImages(bufferList[0])
-  console.log("result: ", result)
+  const list = await convertPdfToImages(bufferList[0])
 
-  // const blobList = await Promise.all(bufferList.map((buffer) => convertPdfToImages(buffer)))
-  // console.log("blobList: ", blobList)
-  // const result = await transformPDFToPictureApi(list)
-  // console.log(result)
+  const arrayBufferList = await Promise.all(list.map((blob) => blobToArrayBuffer(blob)))
+
+  const result = await transformPDFToPictureApi(arrayBufferList)
+  console.log(result)
 }
 </script>
 

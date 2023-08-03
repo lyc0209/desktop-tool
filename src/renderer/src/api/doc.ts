@@ -1,3 +1,3 @@
 const { transformPDFToPicture } = window.doc
 
-export const transformPDFToPictureApi = (pathList: string[]) => transformPDFToPicture(pathList)
+export const transformPDFToPictureApi = (list: ArrayBuffer[]) => transformPDFToPicture(list)
