@@ -10,15 +10,15 @@ export const initDocIpc = () => {
 
     const savePath = await selectSavePath()
     if (!savePath) {
-      return
+      return false
     }
     console.log(savePath)
 
-    list.forEach((buffer, index) => {
-      saveArrayBuffer(join(savePath, `pdf-${String(index + 1)}.png`), buffer).then(() => {})
-    })
-
-    // pathList.forEach((path) => pdfToPicture(path))
+    await Promise.all(
+      list.map((buffer, index) => {
+        saveArrayBuffer(join(savePath, `pdf-${String(index + 1)}.png`), buffer).then(() => {})
+      })
+    )
 
     return true
   })

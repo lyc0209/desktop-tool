@@ -5,6 +5,8 @@ import { transformPDFToPictureApi } from "@renderer/api/doc"
 import { convertPdfToImages } from "@renderer/utils/doc/pdf"
 import { blobToArrayBuffer } from "@common/utils/file"
 
+const message = useMessage()
+
 const toTransformList = ref<UploadFileInfo[]>([])
 
 const handleUploadChange = (data: { fileList: UploadFileInfo[] }) => {
@@ -15,19 +17,35 @@ const handleRemove = (data: { file: UploadFileInfo; fileList: UploadFileInfo[] }
   console.log(data)
 }
 
+const btnLoading = ref(false)
 const onTransformClick = async () => {
-  // if (list.length === 0) {
-  //   return
-  // }
+  if (toTransformList.value.length === 0) {
+    message.warning("请先选择要转换的PDF")
+    return
+  }
 
-  const bufferList = await Promise.all(toTransformList.value.map((item) => item.file.arrayBuffer()))
+  btnLoading.value = true
+  try {
+    const list = (
+      await Promise.all(
+        toTransformList.value.map(async (item) => convertPdfToImages(await item.file.arrayBuffer()))
+      )
+    ).flat(1)
 
-  const list = await convertPdfToImages(bufferList[0])
+    // blob 转 buffer
+    const arrayBufferList = await Promise.all(list.map((blob) => blobToArrayBuffer(blob)))
 
-  const arrayBufferList = await Promise.all(list.map((blob) => blobToArrayBuffer(blob)))
-
-  const result = await transformPDFToPictureApi(arrayBufferList)
-  console.log(result)
+    // 保存图片
+    const result = await transformPDFToPictureApi(arrayBufferList)
+    if (result) {
+      message.success("保存成功")
+    }
+  } catch (e) {
+    console.log(e)
+    message.error("操作失败")
+  } finally {
+    btnLoading.value = false
+  }
 }
 </script>
 
@@ -50,7 +68,7 @@ const onTransformClick = async () => {
         <n-text style="font-size: 16px"> 点击或者拖动文件到该区域来上传PDF </n-text>
       </n-upload-dragger>
     </n-upload>
-    <n-button type="primary" @click="onTransformClick">转换</n-button>
+    <n-button :loading="btnLoading" type="primary" @click="onTransformClick">转换</n-button>
   </PageWrapper>
 </template>
 

@@ -4,52 +4,40 @@ import * as pdfWorker from "pdfjs-dist/build/pdf.worker.min?url"
 pdfLib.GlobalWorkerOptions.workerSrc = pdfWorker.default
 
 export const convertPdfToImages = async (pdfBuffer: ArrayBuffer) => {
-  return new Promise<Blob[]>((resolve, reject) => {
-    const blobArr: Blob[] = []
+  const blobArr: Blob[] = []
 
-    // 获取canvas元素和pdf文件路径
-    const canvas = document.createElement("canvas")
+  const canvas = document.createElement("canvas")
 
-    pdfLib
-      .getDocument(pdfBuffer)
-      .promise.then((pdf) => {
-        for (let pageNum = 1; pageNum <= pdf.numPages; pageNum++) {
-          pdf
-            .getPage(pageNum)
-            .then((page) => {
-              const viewport = page.getViewport({ scale: 1.0 })
+  const pdf = await pdfLib.getDocument(pdfBuffer).promise
 
-              // 设置canvas尺寸
-              canvas.width = viewport.width
-              canvas.height = viewport.height
+  for (let pageNum = 1; pageNum <= pdf.numPages; pageNum++) {
+    const page = await pdf.getPage(pageNum)
 
-              page
-                .render({
-                  canvasContext: canvas.getContext("2d"),
-                  viewport: viewport
-                })
-                .promise.then(() => {
-                  canvas.toBlob((blob) => {
-                    console.log(blob, pageNum, pdf.numPages)
-                    if (blob) {
-                      blobArr.push(blob)
-                    }
-                    if (pageNum === pdf.numPages) {
-                      resolve(blobArr)
-                    }
-                  })
-                })
-                .catch((e) => {
-                  reject(e)
-                })
-            })
-            .catch((e) => {
-              reject(e)
-            })
+    const viewport = page.getViewport({ scale: 1.5 })
+    const outputScale = window.devicePixelRatio || 1
+
+    // 设置canvas尺寸
+    canvas.width = Math.floor(viewport.width * outputScale)
+    canvas.height = Math.floor(viewport.height * outputScale)
+    canvas.style.width = Math.floor(viewport.width) + "px"
+    canvas.style.height = Math.floor(viewport.height) + "px"
+
+    await page.render({
+      canvasContext: canvas.getContext("2d", { willReadFrequently: true }),
+      viewport: viewport,
+      transform: outputScale !== 1 ? [outputScale, 0, 0, outputScale, 0, 0] : undefined
+    }).promise
+
+    await new Promise((resolve) => {
+      canvas.toBlob((blob) => {
+        if (blob) {
+          blobArr.push(blob)
         }
+        resolve()
       })
-      .catch((e) => {
-        reject(e)
-      })
-  })
+    })
+  }
+
+  canvas.remove()
+  return blobArr
 }

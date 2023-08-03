@@ -9,6 +9,8 @@ getTestApi("lyc").then((res) => {
 
 <template>
   <n-config-provider class="h-screen" :locale="zhCN" :date-locale="dateZhCN">
-    <router-view />
+    <n-message-provider>
+      <router-view />
+    </n-message-provider>
   </n-config-provider>
 </template>
