@@ -1,10 +1,12 @@
 import * as pdfLib from "pdfjs-dist"
 import * as pdfWorker from "pdfjs-dist/build/pdf.worker.min?url"
+import { blobToArrayBuffer } from "@common/utils/file"
+import { saveFileApi } from "@renderer/api/common"
 
 pdfLib.GlobalWorkerOptions.workerSrc = pdfWorker.default
 
-export const convertPdfToImages = async (pdfBuffer: ArrayBuffer) => {
-  const blobArr: Blob[] = []
+export const convertPdfToImages = async (file: File, savePath: string) => {
+  const pdfBuffer = await file.arrayBuffer()
 
   const canvas = document.createElement("canvas")
 
@@ -28,16 +30,17 @@ export const convertPdfToImages = async (pdfBuffer: ArrayBuffer) => {
       transform: outputScale !== 1 ? [outputScale, 0, 0, outputScale, 0, 0] : undefined
     }).promise
 
-    await new Promise((resolve) => {
+    const picBuffer = await new Promise((resolve) => {
       canvas.toBlob((blob) => {
         if (blob) {
-          blobArr.push(blob)
+          resolve(blobToArrayBuffer(blob))
         }
         resolve()
       })
     })
+
+    await saveFileApi(picBuffer, savePath, `${file.name}-${pageNum}.png`)
   }
 
   canvas.remove()
-  return blobArr
 }

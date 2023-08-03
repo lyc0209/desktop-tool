@@ -5,7 +5,8 @@ export const enum IpcEnum {
 }
 
 export const enum CommonEnum {
-  SelectSavePath = "selectSavePath"
+  SelectSavePath = "selectSavePath",
+  SaveFile = "saveFile"
 }
 
 export const enum DocEnum {

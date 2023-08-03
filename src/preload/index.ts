@@ -7,7 +7,8 @@ import { CommonApi, DocApi } from "@preload/types"
 const api = {}
 
 const commonApi: CommonApi = {
-  selectSavePath: () => ipcRenderer.invoke(CommonEnum.SelectSavePath)
+  selectSavePath: () => ipcRenderer.invoke(CommonEnum.SelectSavePath),
+  saveFile: (file, savePath, fileName) => ipcRenderer.invoke(CommonEnum.SaveFile, file, savePath, fileName)
 }
 
 const docApi: DocApi = {

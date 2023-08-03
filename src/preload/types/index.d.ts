@@ -16,6 +16,7 @@ export interface TestApi {
 
 export interface CommonApi {
   selectSavePath: () => Promise<string | undefined>
+  saveFile: (file: ArrayBuffer, savePath: string, fileName: string) => Promise<boolean>
 }
 
 export interface DocApi {

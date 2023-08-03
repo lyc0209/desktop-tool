@@ -1,9 +1,7 @@
 <script setup lang="ts">
 import { ArchiveOutline as ArchiveIcon } from "@vicons/ionicons5"
 import { UploadFileInfo } from "naive-ui"
-import { transformPDFToPictureApi } from "@renderer/api/doc"
 import { convertPdfToImages } from "@renderer/utils/doc/pdf"
-import { blobToArrayBuffer } from "@common/utils/file"
 import { selectSavePathApi } from "@renderer/api/common"
 
 const message = useMessage()
@@ -30,20 +28,10 @@ const onTransformClick = async () => {
     const savePath = await selectSavePathApi()
     console.log(savePath)
 
-    const list = (
-      await Promise.all(
-        toTransformList.value.map(async (item) => convertPdfToImages(await item.file.arrayBuffer()))
-      )
-    ).flat(1)
-
-    // blob 转 buffer
-    const arrayBufferList = await Promise.all(list.map((blob) => blobToArrayBuffer(blob)))
-
-    // 保存图片
-    const result = await transformPDFToPictureApi(arrayBufferList)
-    if (result) {
-      message.success("保存成功")
+    for (const item of toTransformList.value) {
+      await convertPdfToImages(item.file, savePath)
     }
+    message.success("保存成功")
   } catch (e) {
     console.log(e)
     message.error("操作失败")
