@@ -5,12 +5,17 @@ declare global {
     electron: ElectronAPI
     api: unknown
     test: TestApi
+    common: CommonApi
     doc: DocApi
   }
 }
 
 export interface TestApi {
   getTest: (keys: string) => Promise<string>
+}
+
+export interface CommonApi {
+  selectSavePath: () => Promise<string | undefined>
 }
 
 export interface DocApi {

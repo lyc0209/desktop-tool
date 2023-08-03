@@ -3,3 +3,11 @@ export const enum IpcEnum {
 
   TransformPDFToPicture = "transformPDFToPicture"
 }
+
+export const enum CommonEnum {
+  SelectSavePath = "selectSavePath"
+}
+
+export const enum DocEnum {
+  TransformPDFToPicture = "transformPDFToPicture"
+}

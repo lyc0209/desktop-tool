@@ -4,6 +4,7 @@ import { UploadFileInfo } from "naive-ui"
 import { transformPDFToPictureApi } from "@renderer/api/doc"
 import { convertPdfToImages } from "@renderer/utils/doc/pdf"
 import { blobToArrayBuffer } from "@common/utils/file"
+import { selectSavePathApi } from "@renderer/api/common"
 
 const message = useMessage()
 
@@ -26,6 +27,9 @@ const onTransformClick = async () => {
 
   btnLoading.value = true
   try {
+    const savePath = await selectSavePathApi()
+    console.log(savePath)
+
     const list = (
       await Promise.all(
         toTransformList.value.map(async (item) => convertPdfToImages(await item.file.arrayBuffer()))
@@ -69,6 +73,7 @@ const onTransformClick = async () => {
       </n-upload-dragger>
     </n-upload>
     <n-button :loading="btnLoading" type="primary" @click="onTransformClick">转换</n-button>
+    <canvas id="pdf-canvas"></canvas>
   </PageWrapper>
 </template>
 

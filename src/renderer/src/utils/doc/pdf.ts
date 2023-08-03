@@ -13,7 +13,7 @@ export const convertPdfToImages = async (pdfBuffer: ArrayBuffer) => {
   for (let pageNum = 1; pageNum <= pdf.numPages; pageNum++) {
     const page = await pdf.getPage(pageNum)
 
-    const viewport = page.getViewport({ scale: 1.5 })
+    const viewport = page.getViewport({ scale: 4 })
     const outputScale = window.devicePixelRatio || 1
 
     // 设置canvas尺寸
