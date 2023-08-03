@@ -5,7 +5,11 @@ import { saveFileApi } from "@renderer/api/common"
 
 pdfLib.GlobalWorkerOptions.workerSrc = pdfWorker.default
 
-export const convertPdfToImages = async (file: File, savePath: string) => {
+export const convertPdfToImages = async (
+  file: File,
+  savePath: string,
+  callback: (percent: number) => void
+) => {
   const pdfBuffer = await file.arrayBuffer()
 
   const canvas = document.createElement("canvas")
@@ -40,6 +44,7 @@ export const convertPdfToImages = async (file: File, savePath: string) => {
     })
 
     await saveFileApi(picBuffer, savePath, `${file.name}-${pageNum}.png`)
+    callback(Math.floor((pageNum / pdf.numPages) * 100))
   }
 
   canvas.remove()

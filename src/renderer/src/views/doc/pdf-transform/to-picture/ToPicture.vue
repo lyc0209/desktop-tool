@@ -16,29 +16,37 @@ const handleRemove = (data: { file: UploadFileInfo; fileList: UploadFileInfo[] }
   console.log(data)
 }
 
-const btnLoading = ref(false)
 const onTransformClick = async () => {
   if (toTransformList.value.length === 0) {
     message.warning("请先选择要转换的PDF")
     return
   }
 
-  btnLoading.value = true
   try {
     const savePath = await selectSavePathApi()
     console.log(savePath)
 
+    processState.processing = true
+
     for (const item of toTransformList.value) {
-      await convertPdfToImages(item.file, savePath)
+      processState.percentage = 0
+      processState.currentProcess = item.name
+      await convertPdfToImages(item.file, savePath, (per) => (processState.percentage = per))
     }
     message.success("保存成功")
   } catch (e) {
     console.log(e)
     message.error("操作失败")
   } finally {
-    btnLoading.value = false
+    processState.processing = false
   }
 }
+
+const processState = reactive({
+  processing: false,
+  percentage: 0,
+  currentProcess: ""
+})
 </script>
 
 <template>
@@ -60,8 +68,19 @@ const onTransformClick = async () => {
         <n-text style="font-size: 16px"> 点击或者拖动文件到该区域来上传PDF </n-text>
       </n-upload-dragger>
     </n-upload>
-    <n-button :loading="btnLoading" type="primary" @click="onTransformClick">转换</n-button>
-    <canvas id="pdf-canvas"></canvas>
+    <n-button :loading="processState.processing" type="primary" @click="onTransformClick"
+      >转换</n-button
+    >
+    <div v-if="processState.processing" class="flex flex-col flex-items-center m-t-4">
+      <span style="width: 100%">正在处理：{{ processState.currentProcess }}</span>
+      <n-progress
+        class="m-t-2"
+        type="line"
+        :percentage="processState.percentage"
+        indicator-placement="inside"
+        processing
+      />
+    </div>
   </PageWrapper>
 </template>
 
